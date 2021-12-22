@@ -2,10 +2,10 @@
   <!-- eslint-disable max-len -->
   <div class="container">
     <div class="row">
-      <!-- tree big -->
-      <div class="col-2 col-lg-3 d-none d-lg-block">
+      <!-- tree large -->
+      <div class="col-5 col-lg-4 d-none d-lg-block ontology-secondary-column">
         <div class="module-tree">
-          <div class="multiselect-xxl-container">
+          <div class="multiselect-xxl-container container">
             <div class="row modules-header">
               <h5 class="fibo-title-modules">FIBO Viewer</h5>
               <div class="button-small">
@@ -15,7 +15,7 @@
               </div>
             </div>
           </div>
-          <div class="multiselect-xxl-container">
+          <div class="multiselect-xxl-container container">
             <div class="tmmenu">
               <div class="text-elements">
                 <div class="labelMultiSelect">Select Fibo version</div>
@@ -63,7 +63,7 @@
             <!-- <pre class="language-json"><code>{{ ontologyVersionsDropdownData.selectedData }}</code></pre> -->
             <!-- <pre class="language-json"><code>{{ ontologyVersionsDropdownData.data }}</code></pre> -->
           </div>
-          <div class="multiselect-xxl-container">
+          <div class="multiselect-xxl-container container">
             <div class="tmmenu">
               <div v-on:click="toggleModuleTree()" class="text-elements">
                 <div class="labelMultiSelect">Browse FIBO domains</div>
@@ -86,12 +86,12 @@
       </div>
 
       <!-- main col -->
-      <div class="col-12 col-lg-9 px-0 px-lg-5">
+      <div class="col-12 col-lg-8 ontology-main-column">
         <div class="container px-0">
-          <!-- search box lg -->
-          <div class="searchBox card">
+          <!-- search box large -->
+          <div class="searchBox card searchBoxDesktop d-none d-lg-block">
             <div class="row">
-              <div class="col-lg-12 d-none d-lg-block">
+              <div class="col-lg-12">
                 <div class="multiselect-xxl-container">
                   <div class="tmmenu">
                     <div class="text-elements">
@@ -156,7 +156,7 @@
         <div class="container px-0">
           <a name="ontologyViewerTopOfContainer" id="ontologyViewerTopOfContainer"></a>
           <!-- tree mobile -->
-          <div class="module-tree col-lg-12 col-lg-4 d-lg-none">
+          <div class="module-tree col-lg-12 d-lg-none">
             <div class="multiselect-container">
               <multiselect
                 v-model="ontologyVersionsDropdownData.selectedData"
@@ -304,8 +304,11 @@
                       class="maturity-icon"
                       :class="{
                         'maturity-provisional':
-                          result.maturityLevel !== 'release' && result.maturityLevel,
-                        'maturity-release': result.maturityLevel === 'release',
+                          result.maturityLevel.icon === 'develop',
+                        'maturity-release':
+                          result.maturityLevel.icon === 'release',
+                        'maturity-mixed':
+                          result.maturityLevel.icon === 'mixed',
                       }"
                     ></div>
                     <customLink
@@ -408,7 +411,7 @@
                           class="alert alert-primary alert-maturity"
                           role="alert"
                           v-if="
-                            data.maturityLevel.label != 'release' && data.maturityLevel.label != ''
+                            data.maturityLevel.label !== 'release' && data.maturityLevel.label !== ''
                           "
                         >
                           This resource has maturity level
@@ -425,12 +428,14 @@
 
                         <!-- header item title -->
                         <h5
+                          class="card-title"
                           :class="{
-                            'maturity-provisional':
-                              this.data.maturityLevel.label !== 'release' &&
-                              this.data.maturityLevel.label != '',
-                            'maturity-production': this.data.maturityLevel.label === 'release',
-                            'card-title': true,
+                            'maturity-provisional': 
+                              this.data.maturityLevel.icon && this.data.maturityLevel.icon === 'develop',
+                            'maturity-production': 
+                              this.data.maturityLevel.icon && this.data.maturityLevel.icon === 'release',
+                            'maturity-mixed': 
+                              this.data.maturityLevel.icon && this.data.maturityLevel.icon === 'mixed',
                           }"
                         >
                           {{ data.label }}
@@ -960,6 +965,8 @@ export default {
           }
           this.data = body.result;
 
+          console.log(this.data)
+
           this.error = false;
         } catch (err) {
           console.error(err);
@@ -1091,7 +1098,8 @@ export default {
         // PH placeholder values
         this.searchBox.totalResults = 1234;
         for (const res of this.searchBox.searchResults) {
-          res.maturityLevel = "provisional";
+          res.maturityLevel = {};
+          res.maturityLevel.icon = "develop";
         }
         // PH placeholder values
 
@@ -1290,6 +1298,9 @@ h6 {
 .search-box {
   margin: 20px;
 }
+.module-tree {
+  min-width: 285px;
+}
 .module-tree ul,
 .module-tree li {
   padding: 0;
@@ -1300,6 +1311,7 @@ h6 {
     display: none;
   }
 }
+
 @media (min-width: 1px) {
   .modules-list {
     margin: 20px 0 0 20px;
@@ -1369,14 +1381,7 @@ article ul.maturity-levels li:before {
     }
   }
 }
-// dd {
-//   margin-left: 20px;
 
-//   > div {
-//     margin-top: 5px;
-//     margin-left: 7px;
-//   }
-// }
 
 //
 //
@@ -1393,6 +1398,14 @@ article ul.maturity-levels li:before {
 }
 .modules-header {
   margin-top: 20px;
+  justify-content: space-between;
+  .button-small {
+    margin: 0;
+  }
+  h5 {
+    padding: 0;
+    margin: 0;
+  }
 }
 .tmmenu {
   align-items: center;
@@ -1400,8 +1413,9 @@ article ul.maturity-levels li:before {
   border-radius: 2px;
   box-shadow: 0px 5px 20px #07539526;
   display: flex;
+  justify-content: space-between;
   height: 80px;
-  margin-top: 20px;
+  margin-top: 60px;
   padding: 0 30px;
 }
 
@@ -1501,10 +1515,16 @@ article ul.maturity-levels li:before {
   background: rgba(0, 0, 0, 0.05);
   margin-top: 20px;
   padding: 0 20px 20px 20px;
+  border-radius: 2px;
+  border: none;
   .tmmenu {
     margin-top: 0px;
     padding-top: 5px;
   }
+}
+.searchBoxDesktop {
+  margin-top: 60px;
+  margin-bottom: 45px;
 }
 
 @media (min-width: 1355px) {
@@ -1606,8 +1626,16 @@ article ul.maturity-levels li:before {
 //
 // desktop/global
 // ontology-item
+.ontology-main-column{
+  padding-left: 60px;
+  padding-right: 60px;
+}
+.ontology-secondary-column{
+  margin-top: 40px;
+  padding-left: 60px;
+  padding-right: 0px;
+}
 .ontology-item {
-  margin-top: 45px;
 
   .section-content-wrapper {
     margin-bottom: 60px;
@@ -2004,7 +2032,7 @@ article ul.maturity-levels li:before {
         }
         &.maturity-mixed {
           &::before {
-            background-image: url("../assets/icons/provisional-maturity.svg");
+            background-image: url("../assets/icons/mixed-maturity.svg");
           }
         }
         &.maturity-production {
@@ -2087,6 +2115,10 @@ article ul.maturity-levels li:before {
 // mobile
 // ontology-item
 @media (max-width: 768px) {
+  .ontology-main-column{
+    padding-left: 0px;
+    padding-right: 0px;
+  }
   .section-title {
     &::before {
       content: "";
@@ -2119,7 +2151,6 @@ article ul.maturity-levels li:before {
   }
 
   .ontology-item {
-    margin-top: 45px;
     font-family: Inter;
 
     .row {
@@ -2225,6 +2256,9 @@ article ul.maturity-levels li:before {
           margin-left: 34px;
         }
         &.maturity-production {
+          margin-left: 34px;
+        }
+        &.maturity-mixed {
           margin-left: 34px;
         }
         &::before {
@@ -2366,7 +2400,7 @@ article ul.maturity-levels li:before {
           }
           &.maturity-mixed {
             &::before {
-              background-image: url("../assets/icons/provisional-maturity.svg");
+              background-image: url("../assets/icons/mixed-maturity.svg");
             }
           }
           &.maturity-production {
