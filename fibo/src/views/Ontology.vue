@@ -467,11 +467,13 @@
                           class="card-title"
                           :class="{
                             'maturity-provisional':
-                              this.data.maturityLevel.icon &&
-                              this.data.maturityLevel.icon === 'develop',
+                              (this.data.maturityLevel.label !== 'production' && this.data.maturityLevel.label != '' )||
+                              (this.data.maturityLevel.icon &&
+                              this.data.maturityLevel.icon === 'develop'),
                             'maturity-production':
-                              this.data.maturityLevel.icon &&
-                              this.data.maturityLevel.icon === 'release',
+                              this.data.maturityLevel.label === 'production' ||
+                              (this.data.maturityLevel.icon &&
+                              this.data.maturityLevel.icon === 'release'),
                             'maturity-mixed':
                               this.data.maturityLevel.icon &&
                               this.data.maturityLevel.icon === 'mixed',
