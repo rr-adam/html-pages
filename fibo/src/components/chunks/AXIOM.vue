@@ -8,7 +8,7 @@
     <div href="#"
       v-show="!isMoreVisible"
       @click.prevent="isMoreVisible = !isMoreVisible">
-        <div class="seeMoreBtnString">Show more</div>
+        <div class="seeMoreBtnAxiom">Show more</div>
         <br />
     </div>
 
@@ -16,7 +16,7 @@
         <component v-bind:is="moreProcessedHtml"></component>
         <div href="#"
           @click.prevent="isMoreVisible = !isMoreVisible">
-            <div class="seeLessBtnString">Show less</div>
+            <div class="seeLessBtnAxiom">Show less</div>
             <br />
         </div>
     </div>
@@ -25,7 +25,7 @@
 
 <script>
 import Vue from 'vue';
-import customLink from './link';
+import customLink from './link.vue';
 
 Vue.component('customLink', customLink);
 
@@ -58,7 +58,7 @@ export default {
   data() {
     const html = this.value;
     let lines = html.split(/(?:\r\n|\r|\n)/g);
-    if (lines.length == 1) {
+    if (lines.length === 1) {
       lines = html.split('<br />');
     }
     return {
@@ -94,7 +94,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.seeMoreBtnString {
+.seeMoreBtnAxiom {
+  font-size: 18px;
+  line-height: 30px;
   display: flex;
   align-items: center;
 
@@ -116,8 +118,10 @@ export default {
     margin-right: 6px;
   }
 }
-.seeLessBtnString {
+.seeLessBtnAxiom {
   cursor: pointer;
+  font-size: 18px;
+  line-height: 30px;
   text-decoration: none;
   color: rgba(0, 0, 0, 0.8);
   margin-top: 20px;
@@ -139,8 +143,8 @@ export default {
   }
 }
 
-@media (max-width: 576px) {
-  .seeMoreBtnString {
+@media (max-width: 768px) {
+  .seeMoreBtnAxiom {
     cursor: pointer;
     font-style: normal;
     font-weight: normal;
@@ -160,7 +164,7 @@ export default {
       height: 24px;
     }
   }
-  .seeLessBtnString {
+  .seeLessBtnAxiom {
     cursor: pointer;
     font-style: normal;
     font-weight: normal;

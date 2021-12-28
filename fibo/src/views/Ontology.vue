@@ -211,7 +211,11 @@
                   ></template
                 >
                 <!-- <template slot="clear" slot-scope="props">
-                <div class="multiselect__clear" v-if="ontologyVersionsDropdownData.selectedData" @mousedown.prevent.stop="clearAll(props.search)"></div>
+                <div
+                  class="multiselect__clear"
+                  v-if="ontologyVersionsDropdownData.selectedData"
+                  @mousedown.prevent.stop="clearAll(props.search)">
+                </div>
               </template> -->
                 <span slot="noResult"
                   >Oops! No elements found. Consider changing the search
@@ -467,11 +471,11 @@
                           class="card-title"
                           :class="{
                             'maturity-provisional':
-                              (this.data.maturityLevel.label !== 'production' && this.data.maturityLevel.label != '' )||
+                              (this.data.maturityLevel.label !== 'release' && this.data.maturityLevel.label != '' )||
                               (this.data.maturityLevel.icon &&
                               this.data.maturityLevel.icon === 'develop'),
                             'maturity-production':
-                              this.data.maturityLevel.label === 'production' ||
+                              this.data.maturityLevel.label === 'release' ||
                               (this.data.maturityLevel.icon &&
                               this.data.maturityLevel.icon === 'release'),
                             'maturity-mixed':
@@ -1266,6 +1270,7 @@ export default {
 
         // PH placeholder values
         this.searchBox.totalResults = 1234;
+        // eslint-disable-next-line no-restricted-syntax
         for (const res of this.searchBox.searchResults) {
           res.maturityLevel = {};
           res.maturityLevel.icon = 'develop';
@@ -1408,10 +1413,11 @@ export default {
     }),
   },
   watch: {
-    '$route.query.query': function (query) {
+    '$route.query.query': (query) => {
       this.fetchData(query);
     },
-    '$route.query.version': function (version) {
+    // eslint-disable-next-line no-unused-vars
+    '$route.query.version': (version) => {
       this.updateServers();
 
       this.fetchData(this.query);
